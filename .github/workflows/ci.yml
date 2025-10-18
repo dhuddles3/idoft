@@ -46,6 +46,27 @@ jobs:
         run: >
           python format_checker/main.py ${{github.event.before}}
           ${{github.event.after}}
+  
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build project (skip tests)
+        run: mvn clean install -DskipTests
+
+      - name: Run tests normally
+        run: mvn test
+  
+  
   nondex-tests:
     needs: format-checker
     runs-on: ubuntu-latest
